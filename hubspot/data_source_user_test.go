@@ -3,6 +3,7 @@ package hubspot
 import (
 	"fmt"
 	"testing"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
@@ -26,7 +27,7 @@ func testAccUserDataSourceConfig() string {
 	return fmt.Sprintf(`	  
 	resource "hubspot_user" "user4" {
 		email        = "abhishekdon70@gmail.com"
-		roleid       = "76891"
+		role_id       = "76891"
 	  }
 	data "hubspot_user" "user1" {
 		id = "thesaurabhsaini@gmail.com"

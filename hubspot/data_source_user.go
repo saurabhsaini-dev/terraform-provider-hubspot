@@ -20,7 +20,7 @@ func dataSourceUser() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"roleid": &schema.Schema{
+			"role_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -42,7 +42,7 @@ func dataSourceUserRead(d *schema.ResourceData, m interface{}) error {
 
 	d.SetId(user.Email)
 	d.Set("email", user.Email)
-	d.Set("roleid", user.RoleId)
+	d.Set("role_id", user.RoleId)
 
 	return nil
 }
