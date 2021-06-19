@@ -5,7 +5,6 @@ import (
 	"os"
 	"terraform-provider-hubspot/token"
 	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 

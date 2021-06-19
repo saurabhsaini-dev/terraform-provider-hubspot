@@ -3,7 +3,6 @@ package hubspot
 import (
 	"terraform-provider-hubspot/client"
 	"terraform-provider-hubspot/token"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 

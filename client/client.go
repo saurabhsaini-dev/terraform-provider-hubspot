@@ -59,27 +59,22 @@ func (c *Client) GetUser(userId string) (*User, error) {
 		log.Println("[READ ERROR]: ", err)
 		return nil, err
 	}
-
 	request.Header.Add("Authorization", "Bearer "+c.Token)
 	request.Header.Add("Accept", "application/json")
-
 	response, err := c.HTTPClient.Do(request)
 	if err != nil {
 		log.Println("[READ ERROR]: ", err)
 		return nil, err
 	}
-
 	if response.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("READ ERROR : %v", Errors[response.StatusCode])
 	}
-
 	user := &User{}
 	err = json.NewDecoder(response.Body).Decode(user)
 	if err != nil {
 		log.Println("[READ ERROR]: ", err)
 		return nil, err
 	}
-
 	return user, nil
 }
 
@@ -89,29 +84,24 @@ func (c *Client) CreateUser(user *User) error {
 		RoleId:           user.RoleId,
 		SendWelcomeEmail: true,
 	}
-
 	reqjson, err := json.Marshal(createUserRequest)
 	if err != nil {
 		log.Println("[CREATE ERROR]: ", err)
 		return err
 	}
-
 	request, err := http.NewRequest("POST", fmt.Sprintf("%s/settings/v3/users/", c.HostURL), strings.NewReader(string(reqjson)))
 	if err != nil {
 		log.Println("[CREATE ERROR]: ", err)
 		return err
 	}
-
 	request.Header.Add("Content-Type", "application/json")
 	request.Header.Add("Authorization", "Bearer "+c.Token)
 	request.Header.Add("Accept", "application/json")
-
 	response, err := c.HTTPClient.Do(request)
 	if err != nil {
 		log.Println("[CREATE ERROR]: ", err)
 		return err
 	}
-
 	if response.StatusCode >= 200 && response.StatusCode <= 299 {
 		return nil
 	} else {
@@ -128,23 +118,19 @@ func (c *Client) UpdateUser(user *User) error {
 		log.Println("[UPDATE ERROR]: ", err)
 		return err
 	}
-
 	request, err := http.NewRequest("PUT", fmt.Sprintf("%s/settings/v3/users/%s?idProperty=EMAIL", c.HostURL, user.Email), strings.NewReader(string(updatejson)))
 	if err != nil {
 		log.Println("[UPDATE ERROR]: ", err)
 		return err
 	}
-
 	request.Header.Add("Content-Type", "application/json")
 	request.Header.Add("Authorization", "Bearer "+c.Token)
 	request.Header.Add("Accept", "application/json")
-
 	response, err := c.HTTPClient.Do(request)
 	if err != nil {
 		log.Println("[UPDATE ERROR]: ", err)
 		return err
 	}
-
 	if response.StatusCode >= 200 && response.StatusCode < 400 {
 		return nil
 	} else {
@@ -158,16 +144,13 @@ func (c *Client) DeleteUser(userId string) error {
 		log.Println("[DELETE ERROR]: ", err)
 		return err
 	}
-
 	request.Header.Add("Authorization", "Bearer "+c.Token)
 	request.Header.Add("Accept", "application/json")
-
 	response, err := c.HTTPClient.Do(request)
 	if err != nil {
 		log.Println("[DELETE ERROR]: ", err)
 		return err
 	}
-
 	if response.StatusCode >= 200 && response.StatusCode <= 299 {
 		return nil
 	} else {

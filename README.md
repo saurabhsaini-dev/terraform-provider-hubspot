@@ -9,6 +9,7 @@ Update, Delete and Import operations on Hubspot users.
 * [Go](https://golang.org/doc/install) >= 1.16 (To build the provider plugin)<br>
 * [Terraform](https://www.terraform.io/downloads.html) >= 0.13.x <br/>
 * [Hubspot](https://www.hubspot.com/) Account (APIs are supported in all plans.)
+* [Hubspot API Documentation](https://developers.hubspot.com/docs/api/settings/user-provisioning)
 
 
 ## Setup Hubspot Account
@@ -23,7 +24,7 @@ Update, Delete and Import operations on Hubspot users.
 1. Hubspot uses OAuth for authentication which provides Access Token to authenticate to the API. <br>
 2. Provider need Client Id, Client Secret and Refresh Token to generate Access Token. <br>
 3. Get the Client Id and Client Secret from your app. <br>  
-2. For generating Refresh Token, follow this page <br> (https://developers.hubspot.com/docs/api/oauth-quickstart-guide) <br>
+4. For generating Refresh Token, follow this page <br> (https://developers.hubspot.com/docs/api/oauth-quickstart-guide) <br>
 
 
 ## Building The Provider
@@ -84,12 +85,6 @@ Delete the `resource` block of the user and run `terraform apply`.
 2. Run the command `terraform import hubspot_user.user1 [EMAIL_ID]` to import user.
 3. Run `terraform plan`, if output shows `0 to addd, 0 to change and 0 to destroy` user import is successful.
 4. Check for the attributes in the `.tfstate` file and fill them accordingly in resource block.
-
-### Testing the Provider
-1. Navigate to the test file directory.
-2. Run command `go test` . This command will give combined test result for the execution or errors if any failure occur.
-3. If you want to see test result of each test function individually while running test in a single go, run command `go test -v`
-4. To check test cover run `go test -cover`
 
 
 ## Example Usage 

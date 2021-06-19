@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 	"terraform-provider-hubspot/client"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -39,10 +38,8 @@ func dataSourceUserRead(d *schema.ResourceData, m interface{}) error {
 			return fmt.Errorf("error finding Item with ID %s", userId)
 		}
 	}
-
 	d.SetId(user.Email)
 	d.Set("email", user.Email)
 	d.Set("role_id", user.RoleId)
-
 	return nil
 }

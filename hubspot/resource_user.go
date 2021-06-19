@@ -7,7 +7,6 @@ import (
 	"strings"
 	"terraform-provider-hubspot/client"
 	"time"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -17,9 +16,7 @@ func validateEmail(v interface{}, k string) (ws []string, es []error) {
 	var errs []error
 	var warns []string
 	value := v.(string)
-
 	var emailRegex = regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
-
 	if !(emailRegex.MatchString(value)) {
 		errs = append(errs, fmt.Errorf("Expected EmailId is not valid  %s", k))
 		return warns, errs
@@ -58,7 +55,6 @@ func resourceUserCreate(ctx context.Context, d *schema.ResourceData, m interface
 		Email:  d.Get("email").(string),
 		RoleId: d.Get("role_id").(string),
 	}
-
 	var err error
 	retryErr := resource.Retry(2*time.Minute, func() *resource.RetryError {
 		if err = apiClient.CreateUser(&user); err != nil {
@@ -76,7 +72,6 @@ func resourceUserCreate(ctx context.Context, d *schema.ResourceData, m interface
 	if err != nil {
 		return diag.FromErr(err)
 	}
-
 	d.SetId(user.Email)
 	resourceUserRead(ctx, d, m)
 	return diags
@@ -86,7 +81,6 @@ func resourceUserRead(ctx context.Context, d *schema.ResourceData, m interface{}
 	var diags diag.Diagnostics
 	apiClient := m.(*client.Client)
 	userId := d.Id()
-
 	retryErr := resource.Retry(2*time.Minute, func() *resource.RetryError {
 		user, err := apiClient.GetUser(userId)
 		if err != nil {
@@ -121,13 +115,11 @@ func resourceUserUpdate(ctx context.Context, d *schema.ResourceData, m interface
 
 		return diags
 	}
-
 	if d.HasChange("roleid") {
 		user := client.User{
 			Email:  d.Get("email").(string),
 			RoleId: d.Get("role_id").(string),
 		}
-
 		var err error
 		retryErr := resource.Retry(2*time.Minute, func() *resource.RetryError {
 			if err = apiClient.UpdateUser(&user); err != nil {
@@ -147,7 +139,6 @@ func resourceUserUpdate(ctx context.Context, d *schema.ResourceData, m interface
 		}
 		return diags
 	}
-
 	return resourceUserRead(ctx, d, m)
 }
 
@@ -155,7 +146,6 @@ func resourceUserDelete(ctx context.Context, d *schema.ResourceData, m interface
 	var diags diag.Diagnostics
 	apiClient := m.(*client.Client)
 	userId := d.Id()
-
 	var err error
 	retryErr := resource.Retry(2*time.Minute, func() *resource.RetryError {
 		if err = apiClient.DeleteUser(userId); err != nil {
@@ -186,6 +176,5 @@ func resourceUserImporter(ctx context.Context, d *schema.ResourceData, m interfa
 	}
 	d.Set("email", user.Email)
 	d.Set("role_id", user.RoleId)
-
 	return []*schema.ResourceData{d}, nil
 }

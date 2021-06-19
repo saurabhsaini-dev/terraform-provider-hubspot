@@ -5,7 +5,6 @@ import (
 	"os"
 	"terraform-provider-hubspot/token"
 	"testing"
-
 	"github.com/stretchr/testify/assert"
 )
 
@@ -55,7 +54,6 @@ func TestClient_GetUser(t *testing.T) {
 		t.Run(tc.testName, func(t *testing.T) {
 			token := os.Getenv("HUBSPOT_TOKEN")
 			client := NewClient(token)
-
 			user, err := client.GetUser(tc.userName)
 			if tc.expectErr {
 				assert.Error(t, err)
