@@ -5,13 +5,14 @@ import (
 	"os"
 	"terraform-provider-hubspot/token"
 	"testing"
+
 	"github.com/stretchr/testify/assert"
 )
 
 func init() {
-	clientId := "AAA"
-	clientSecret := "AAA"
-	refreshToken := "AAA"
+	clientId := os.Getenv("HUBSPOT_CLIENT_ID")
+	clientSecret := os.Getenv("HUBSPOT_CLIENT_SECRET")
+	refreshToken := os.Getenv("HUBSPOT_REFRESH_TOKEN")
 	accessToken := token.GenerateToken(clientId, clientSecret, refreshToken)
 	os.Setenv("HUBSPOT_TOKEN", accessToken)
 }

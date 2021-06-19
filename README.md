@@ -1,85 +1,89 @@
-# Terraform Hubspot Provider
+# Hubspot Terraform Provider
 
-This terraform provider allows to perform Create, Read, 
-Update, Delete and Import Hubspot User(s).
+This terraform provider enables to perform Create, Read, 
+Update, Delete and Import operations on Hubspot users.
+
 
 ## Requirements 
 
-* [Go](https://golang.org/doc/install) 1.16 <br>
-* [Terraform](https://www.terraform.io/downloads.html) 0.13.x <br/>
-* [Hubspot](https://www.hubspot.com/) Any account(Free/Starter/Enterprise)
+* [Go](https://golang.org/doc/install) >= 1.16 (To build the provider plugin)<br>
+* [Terraform](https://www.terraform.io/downloads.html) >= 0.13.x <br/>
+* [Hubspot](https://www.hubspot.com/) Account (APIs are supported in all plans.)
+
 
 ## Setup Hubspot Account
-1. Create a Hubspot account with any subscription. (https://www.hubspot.com/)<br>
-2. Sign in to the hubspot account.<br>
-3. Go to your developer account.
-4. Click on `Manage Apps`.
-5. Click on `Create app`. Create app with required parameters. This app will provide us with Client Id, Client Secret and Scopes which will be needed to configure our provider and make request.<br>
 
-### Generate Refresh Token
-For generating Refresh Token, follow this page <br> (https://developers.hubspot.com/docs/api/oauth-quickstart-guide) <br>
+### Setup<a id="setup"></a>
+1. Create a Hubspot account at https://www.hubspot.com/<br>
+2. Go to your developer account.
+3. Click on `Manage Apps` or `Create Apps`.
+4. Click on `Create app`. Create app with required information. This app will provide us with Client Id, Client Secret and Scopes which will be needed to configure our provider and to make request.<br>
+
+### API Authentication
+1. Hubspot uses OAuth for authentication which provides Access Token to authenticate to the API. <br>
+2. Provider need Client Id, Client Secret and Refresh Token to generate Access Token. <br>
+3. Get the Client Id and Client Secret from your app. <br>  
+2. For generating Refresh Token, follow this page <br> (https://developers.hubspot.com/docs/api/oauth-quickstart-guide) <br>
 
 
-
-## Initialise Hubspot Provider in local machine
-1. Clone the respository to $GOPATH/src/github.com/hubspot/terraform-provider-hubspot <br>
-2. Add the Client Id, Client Secret and Refresh Token to respective fields in `main.tf` <br>
-3. Run the following command :
- ```golang
+## Building The Provider
+Clone the repository, add all the dependencies and create a vendor directory that contains all dependencies. For this, run the following commands: <br>
+```
+cd terraform-provider-hubspot
 go mod init terraform-provider-hubspot
 go mod tidy
+go mod vendor
 ```
-4. Run `go mod vendor` to create a vendor directory that contains all the provider's dependencies. <br>
 
-## Installation
-1. Run the following command to create a vendor subdirectory which will comprise of all provider dependencies. <br>
-```
-~/.terraform.d/plugins/${host_name}/${namespace}/${type}/${version}/${target}
-```
-Command:
+## Managing Terraform Plugins
+*For Windows:*
+1. Run the following command to create a sub-directory (`%APPDATA%/terraform.d/plugins/${host_name}/${namespace}/${type}/${version}/${OS_ARCH}`) which will consist of all terraform plugins. <br> 
+Command: 
 ```bash
-mkdir -p ~/.terraform.d/plugins/hashicorp.com/edu/hubspot/0.1.0/[OS_ARCH]
+mkdir -p %APPDATA%/terraform.d/plugins/hashicorp.com/user/hubspot/1.0.0/windows_amd64
 ```
-For eg. `mkdir -p ~/.terraform.d/plugins/hashicorp.com/edu/hubspot/0.1.0/windows_amd64` <br>
-
-2. Run `go build -o terraform-provider-hubspot.exe`. This will save the binary (`.exe`) file in the main/root directory. <br>
-3. Run this command to move this binary file to appropriate location.
+2. Run `go build -o terraform-provider-hubspot.exe` to generate the binary in present working directory. <br>
+3. Run this command to move this binary file to the appropriate location.
  ```
- move terraform-provider-hubspot.exe %APPDATA%\terraform.d\plugins\hashicorp.com\edu\hubspot\0.1.0\[OS_ARCH]
- ```
-
- Otherwise you can manually move the file from current directory to destination directory.<br>
-
-
- [OR]
-
- 1. Download required binaries <br>
- 2. move binary `~/.terraform.d/plugins/[architecture name]/`
+ move terraform-provider-hubspot.exe %APPDATA%\terraform.d\plugins\hashicorp.com/user/hubspot\1.0.0\windows_amd64
+ ``` 
+<p align="center">[OR]</p>
+ 
+3. Manually move the file from current directory to destination directory (`%APPDATA%\terraform.d\plugins\hashicorp.com/user/hubspot\1.0.0\windows_amd64`).<br>
 
 
-## Run the Terraform Provider
+## Working with Terraform
 
-#### Create User
-1. Add the user email and role id in the respective feild in `main.tf`
-2. Initialize the terraform provider `terraform init`
-3. Check the changes applicable using `terraform plan` and apply using `terraform apply`
-4. You will see that a user has been successfully created and an account activation mail has been sent to the user.
-5. Activate the account using the link provided in the mail.
+### Application Credential Integration in terraform
+1. Add `terraform` block and `provider` block as shown in [example usage](#example-usage).
+2. Get the Client Id, Client Secret and Refresh Token.
+3. Assign the above credentials to the respective field in the `provider` block.
 
-#### Update the User
-Update the data of the user in the `main.tf` file and apply using `terraform apply`
+### Basic Terraform Commands
+1. `terraform init` - To initialize a working directory containing Terraform configuration files.
+2. `terraform plan` - To create an execution plan. Displays the changes to be done.
+3. `terraform apply` - To execute the actions proposed in a Terraform plan. Apply the changes.
 
-#### Read the User data
-Add data and output blocks in the `main.tf` file and run `terraform plan` to read user data
+### Create User
+1. Add the `email` and  `role_id` in the respective field in `resource` block as shown in [example usage](#example-usage).
+2. Run the basic terraform commands.<br>
+3. On successful execution, sends an account setup mail to user.<br>
 
-#### Delete the User
-Delete the resource block of the particular user from `main.tf`
-file and run `terraform apply`.
+### Update the User
+1. Update the data of the user in the `resource` block as show in [example usage](#example-usage) and run the basic terraform commands to update user. 
+   User is not allowed to update `email`.
 
-#### Import a User
-1. Write manually a resource configuration block for the User in `main.tf`, to which the imported object will be mapped.
-2. Run the command `terraform import hubspot_user.user1 [EMAIL_ID]`
-3. Check for the attributes in the `.tfstate` file and fill them accordingly in resource block.
+### Read the User Data
+Add `data` and `output` blocks as shown in the [example usage](#example-usage) and run the basic terraform commands.
+
+### Delete the user
+Delete the `resource` block of the user and run `terraform apply`.
+ 
+### Import a User Data
+1. Write manually a `resource` configuration block for the user as shown in [example usage](#example-usage). Imported user will be mapped to this block.
+2. Run the command `terraform import hubspot_user.user1 [EMAIL_ID]` to import user.
+3. Run `terraform plan`, if output shows `0 to addd, 0 to change and 0 to destroy` user import is successful.
+4. Check for the attributes in the `.tfstate` file and fill them accordingly in resource block.
 
 ### Testing the Provider
 1. Navigate to the test file directory.
@@ -93,35 +97,42 @@ file and run `terraform apply`.
 terraform {
     required_providers {
         hubspot = {
-            version = "0.1.0"
-            source  = "hashicorp.com/edu/hubspot"
+            version = "1.0.0"
+            source  = "hashicorp.com/user/hubspot"
         }
     }
 }
 
 provider "hubspot" {
-    client_id     = "AAA"
-    client_secret = "AAA"
-    refresh_token = "AAA"
+    client_id     = "_REPLACE_CLIENT_ID_"
+    client_secret = "_REPLACE_CLIENT_SECRET_"
+    refresh_token = "_REPLACE_REFRESH_TOKEN"
 }
 
 resource "hubspot_user" "user1" {
-    email  = "[EMAIL_ID]"
-    roleid = "[ROLE_ID]"
+    email  = "user@domain.com"
+    rolei_d = "12345"
 }
 
 data "hubspot_user" "user2" {
-    id = "[EMAIL_ID]"
+    id = "user@domain.com"
 }
 
-output "user1" {
+output "user" {
     value = data.hubspot_user.user2
 }
 ```
 
+
 ## Argument Reference
 
-* `client_id`     - The Hubspot Client Id
-* `client_secret` - The Hubspot Client Secert
-* `email`         - The email id associated with the user account.
-* `roleid`        - The Role Id assigned to the user
+* `client_id`     (Required, String)  - The Hubspot App's Client Id
+* `client_secret` (Required, String)  - The Hubspot App's Client Secert
+* `refresh_token` (Required, String)  - The Refresh Token
+* `email`         (Required, String)  - The email id associated with the user account.
+* `roleid`        (Optional, String)  - The role id assigned to the user
+
+## Exceptions
+
+1. You have to generate Refresh Token, it can not be automated.
+2. Role id can be taken from either UI or API (https://developers.hubspot.com/docs/api/settings/user-provisioning).

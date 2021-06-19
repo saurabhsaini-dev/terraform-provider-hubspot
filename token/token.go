@@ -28,6 +28,5 @@ func GenerateToken(clientId, clientSecret, refreshToken string) string {
 	token := &GetTokenResponse{}
 	_ = json.NewDecoder(res.Body).Decode(token)
 
-	fmt.Println(token.AccessToken)
 	return token.AccessToken
 }
