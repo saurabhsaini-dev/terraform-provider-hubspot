@@ -115,7 +115,7 @@ func resourceUserUpdate(ctx context.Context, d *schema.ResourceData, m interface
 
 		return diags
 	}
-	if d.HasChange("roleid") {
+	if d.HasChange("role_id") {
 		user := client.User{
 			Email:  d.Get("email").(string),
 			RoleId: d.Get("role_id").(string),
