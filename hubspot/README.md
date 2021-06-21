@@ -1,4 +1,4 @@
-# Resource User tesing
+# Resource User testing
 
 <https://www.terraform.io/docs/extend/testing/acceptance-tests/index.html>
 

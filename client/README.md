@@ -1,4 +1,4 @@
-# Client tesing
+# Client testing
 
 This folder contains two files <strong>client.go</strong> and <strong>client_test.go</strong>
 
