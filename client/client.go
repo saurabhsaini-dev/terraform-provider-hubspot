@@ -16,9 +16,14 @@ type User struct {
 	RoleId string `json:"roleId"`
 }
 
-type CreateUserRequest struct {
+type CreateUserRequestWithRole struct {
 	Email            string `json:"email"`
 	RoleId           string `json:"roleId"`
+	SendWelcomeEmail bool   `json:"sendWelcomeEmail"`
+}
+
+type CreateUserRequestWithNoRole struct {
+	Email            string `json:"email"`
 	SendWelcomeEmail bool   `json:"sendWelcomeEmail"`
 }
 
@@ -79,33 +84,63 @@ func (c *Client) GetUser(userId string) (*User, error) {
 }
 
 func (c *Client) CreateUser(user *User) error {
-	createUserRequest := CreateUserRequest{
-		Email:            user.Email,
-		RoleId:           user.RoleId,
-		SendWelcomeEmail: true,
-	}
-	reqjson, err := json.Marshal(createUserRequest)
-	if err != nil {
-		log.Println("[CREATE ERROR]: ", err)
-		return err
-	}
-	request, err := http.NewRequest("POST", fmt.Sprintf("%s/settings/v3/users/", c.HostURL), strings.NewReader(string(reqjson)))
-	if err != nil {
-		log.Println("[CREATE ERROR]: ", err)
-		return err
-	}
-	request.Header.Add("Content-Type", "application/json")
-	request.Header.Add("Authorization", "Bearer "+c.Token)
-	request.Header.Add("Accept", "application/json")
-	response, err := c.HTTPClient.Do(request)
-	if err != nil {
-		log.Println("[CREATE ERROR]: ", err)
-		return err
-	}
-	if response.StatusCode >= 200 && response.StatusCode <= 299 {
-		return nil
+	if user.RoleId == "" {
+		createUserRequest := CreateUserRequestWithNoRole{
+			Email:            user.Email,
+			SendWelcomeEmail: true,
+		}
+		reqjson, err := json.Marshal(createUserRequest)
+		if err != nil {
+			log.Println("[CREATE ERROR]: ", err)
+			return err
+		}
+		request, err := http.NewRequest("POST", fmt.Sprintf("%s/settings/v3/users/", c.HostURL), strings.NewReader(string(reqjson)))
+		if err != nil {
+			log.Println("[CREATE ERROR]: ", err)
+			return err
+		}
+		request.Header.Add("Content-Type", "application/json")
+		request.Header.Add("Authorization", "Bearer "+c.Token)
+		request.Header.Add("Accept", "application/json")
+		response, err := c.HTTPClient.Do(request)
+		if err != nil {
+			log.Println("[CREATE ERROR]: ", err)
+			return err
+		}
+		if response.StatusCode >= 200 && response.StatusCode <= 299 {
+			return nil
+		} else {
+			return fmt.Errorf("CREATE ERROR : %v", Errors[response.StatusCode])
+		}
 	} else {
-		return fmt.Errorf("CREATE ERROR : %v", Errors[response.StatusCode])
+		createUserRequest := CreateUserRequestWithRole{
+			Email:            user.Email,
+			RoleId:           user.RoleId,
+			SendWelcomeEmail: true,
+		}
+		reqjson, err := json.Marshal(createUserRequest)
+		if err != nil {
+			log.Println("[CREATE ERROR]: ", err)
+			return err
+		}
+		request, err := http.NewRequest("POST", fmt.Sprintf("%s/settings/v3/users/", c.HostURL), strings.NewReader(string(reqjson)))
+		if err != nil {
+			log.Println("[CREATE ERROR]: ", err)
+			return err
+		}
+		request.Header.Add("Content-Type", "application/json")
+		request.Header.Add("Authorization", "Bearer "+c.Token)
+		request.Header.Add("Accept", "application/json")
+		response, err := c.HTTPClient.Do(request)
+		if err != nil {
+			log.Println("[CREATE ERROR]: ", err)
+			return err
+		}
+		if response.StatusCode >= 200 && response.StatusCode <= 299 {
+			return nil
+		} else {
+			return fmt.Errorf("CREATE ERROR : %v", Errors[response.StatusCode])
+		}
 	}
 }
 

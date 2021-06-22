@@ -124,7 +124,7 @@ output "user" {
 * `client_secret` (Required, String)  - The Hubspot App's Client Secert. This may also be set via the `"HUBSPOT_CLIENT_SECRET"` environment variable.
 * `refresh_token` (Required, String)  - The Refresh Token. This may also be set via the `"HUBSPOT_REFRESH_TOKEN"` environment variable.
 * `email`         (Required, String)  - The email id associated with the user account.
-* `roleid`        (Optional, String)  - The role id assigned to the user.
+* `role_id`        (Optional, String)  - The role id assigned to the user.
 * `id`            (Required, string)  - Email of particular user that has to be read.
 
 ## Exceptions
@@ -135,7 +135,10 @@ output "user" {
   1. Go to `Settings -> Users & Teams -> Roles -> click on any Role`.<br>
   2. Then in the URL of that page, the last entry is the Id of that Role. <br>
   For exmple in the below URL, `76891` is Id of that Role. 
-  ```
+  `
   https://app.hubspot.com/settings/20060307/users/permissions/76891
-  ```
+  `
 * The API (https://developers.hubspot.com/docs/api/settings/user-provisioning).
+3. `Super Admin` role can not be assigned to a user through API. It should be done through UI. But it can be changed to another role through API.<br>
+4. A user's Role can not be updated to `No Role`.
+
