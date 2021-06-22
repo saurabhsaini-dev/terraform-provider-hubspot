@@ -161,7 +161,7 @@ func (c *Client) DeleteUser(userId string) error {
 
 func (c *Client) IsRetry(err error) bool {
 	if err != nil {
-		if strings.Contains(err.Error(), "\"statusCode\":503") == true {
+		if strings.Contains(err.Error(), "429") == true {
 			return true
 		}
 	}
