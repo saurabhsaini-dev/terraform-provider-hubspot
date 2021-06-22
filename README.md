@@ -71,7 +71,7 @@ mkdir -p %APPDATA%/terraform.d/plugins/hashicorp.com/user/hubspot/1.0.0/windows_
 
 ### Update the User
 1. Update the data of the user in the `resource` block as show in [example usage](#example-usage) and run the basic terraform commands to update user. 
-   User is not allowed to update `email`.
+   User is only allowed to update `role_id`.
 
 ### Read the User Data
 Add `data` and `output` blocks as shown in the [example usage](#example-usage) and run the basic terraform commands.
